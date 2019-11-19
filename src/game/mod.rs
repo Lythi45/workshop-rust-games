@@ -37,6 +37,9 @@ impl EventHandler for State {
         /*
         * TODO: Draw the background
         */
+        graphics::draw(ctx,
+                       &self.assets.bg_image,
+                       graphics::DrawParam::new().dest(Point2::new(0., 0.)))?;
         for s in self.snacks.iter() {
             s.draw(ctx, &self.assets.snack_image)?;
         }

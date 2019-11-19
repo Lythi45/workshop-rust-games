@@ -30,6 +30,12 @@ impl Crab {
         /*
         * TODO: Move crab left to right
         */
+        self.location.x += self.velocity.x;
+        if self.location.x + (self.w * 2.) >= max_screen {
+            self.velocity.x = - self.s;
+        } else if self.location.x < self.w {
+            self.velocity.x = self.s;
+        }
         Ok(self)
     }
 
@@ -37,6 +43,10 @@ impl Crab {
         /*
         * TODO: Draw crab image
         */
+        let drawparams = graphics::DrawParam::new()
+            .dest(self.location)
+            .scale(Vector2::new(0.2, 0.2));
+        graphics::draw(ctx, img, drawparams)?;
         Ok(self)
     }
 }
