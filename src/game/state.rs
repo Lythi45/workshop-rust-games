@@ -59,6 +59,12 @@ impl State {
         * TODO:
         * Display the scores on the screen!
         */
+        graphics::draw(ctx, &score_1, (Point2::new(10.0, 10.0),
+                                       0.0,
+                                       graphics::BLACK))?;
+        graphics::draw(ctx, &score_2, (Point2::new(self.screen_width - 180.00, 10.0),
+                                       0.0,
+                                       graphics::BLACK))?;
         Ok(self)
     }
 
@@ -72,5 +78,17 @@ impl State {
         * 1. Play the sound
         * 2. Increase player's score
         */
+        for s in self.snacks.iter_mut() {
+            if s.collides_with(c1) {
+                let _ = self.assets.snap_sound.play();
+                self.player1.increase_score()
+                    .expect("could not update score");
+            }
+            if s.collides_with(c2) {
+                let _ = self.assets.snap_sound.play();
+                self.player2.increase_score()
+                    .expect("could not update score");
+            }
+        }
     }
 }

@@ -35,6 +35,17 @@ impl Snack {
         * 2. Set active to false if the snack has left the screen
         * 3. If not active, reset the snack
         */
+        self.location += self.velocity;
+        if self.location.y > SCREEN_H {
+            self.active = false;
+        }
+        if !self.active {
+            self.location = Point2::new(rand::random::<f32>() * SCREEN_W,
+                                        -SNACK_W);
+            self.velocity = Vector2::new(0.0,
+                                         rand::random::<f32>() * 2.0 + 0.1);
+            self.active = true;
+        }
         Ok(self)
     }
 
@@ -43,7 +54,12 @@ impl Snack {
         * TODO: 
         * Draw the snack, but only if it's active
         */
-        Ok(self)
+        if self.active {
+            let drawparams = graphics::DrawParam::new()
+                .dest(self.location);
+            graphics::draw(ctx, img, drawparams)?;
+       } 
+       Ok(self)
     }
 
     pub fn collides_with(&mut self, other: Point2) -> bool {
@@ -52,6 +68,13 @@ impl Snack {
         * Check whether the snack has collided with something,
         * providing it's active
         */
+        if self.active {
+            let distance = self.location - other;
+            if distance.norm() < self.w {
+                self.active = false;
+                return true
+            }
+        }
         false
     }
 }
@@ -61,5 +84,6 @@ pub fn spawn_snacks(num: usize) -> Vec<Snack> {
         * TODO: 
         * Generate snacks
         */
-        vec![]
+        (0..num).map(|_v| Snack::new()
+                 .expect("Could not create snack")).collect()
 }

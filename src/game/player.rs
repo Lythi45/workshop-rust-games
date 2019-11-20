@@ -30,6 +30,7 @@ impl Player {
         /*
         * TODO: Update claw
         */
+        self.claw.update(new_loc)?;
         Ok(self)
     }
 
@@ -39,6 +40,7 @@ impl Player {
         /*
         * TODO: Draw claw
         */
+        self.claw.draw(ctx, &img)?;
         Ok(self)
     }
 
@@ -46,6 +48,7 @@ impl Player {
         /*
         * TODO: Make score go up
         */
+        self.score += 1;
         Ok(self)
     }
 
@@ -53,5 +56,6 @@ impl Player {
         /*
         * TODO: Move the claw
         */
+        self.claw.movedir(dir);
     }
 }

@@ -42,6 +42,7 @@ impl Claw {
         /*
         * TODO: Update claw location according to body's location
         */
+        self.location = parent_loc;
         Ok(self)
     }
 
@@ -51,6 +52,20 @@ impl Claw {
         * 1. Draw a pure red line from the body to the claw
         * 2. Draw the claw image
         */
+        let drawparams = graphics::DrawParam::new()
+            .dest(self.get_origin())
+            .rotation(0.0)
+            .scale(Vector2::new(0.2, 0.2));
+        graphics::draw(ctx, img, drawparams)?;
+        let red_color = graphics::Color::new(1.0, 0.0, 0.0, 1.0);
+        let body_location = self.location + self.body_anchor;
+        let joint_location = self.location + self.joint_anchor;
+        let arm = graphics::Mesh::new_line(ctx,
+                                           &[body_location,
+                                             joint_location],
+                                           10.,
+                                           red_color)?;
+        graphics::draw(ctx, &arm, graphics::DrawParam::default())?;
         Ok(self)
     }
 
@@ -58,13 +73,30 @@ impl Claw {
         /*
         * TODO: return calculated origin point
         */
-        Point2::new(0., 0.)
+        let joint_position = self.location + self.joint_anchor;
+        let x = joint_position.x - self.w / 2.;
+        let y = joint_position.y - self.h;
+        Point2::new(x, y)
     }
 
     pub fn movedir(&mut self, dir:Directions) -> Vector2 {
         /*
         * TODO: Change joint anchor according to direction
         */
-        Vector2::new(0., 0.)
+        match dir {
+            Directions::Up => {
+                self.joint_anchor.y -= self.s;
+            },
+            Directions::Down => {
+                self.joint_anchor.y += self.s;
+            },
+            Directions::Right => {
+                self.joint_anchor.x += self.s;
+            },
+            Directions::Left => {
+                self.joint_anchor.x -= self.s;
+            }
+        }
+        self.joint_anchor
     }
 }
